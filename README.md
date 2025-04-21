@@ -35,4 +35,4 @@ A simple browser-based memory matching game built with **HTML, CSS, and JavaScri
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/Srithar810/Memory_Game_JsDom]
+   git clone https://github.com/Srithar810/Memory_Game_JsDom.git
