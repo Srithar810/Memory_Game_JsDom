@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game | JsDom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Memory Game</h1>
+        <button id="restartBtn">Restart</button>
+        <p id="status">Pairs Found: 0 | Pairs Remaining: 8</p>
+    </header>
+    <div  id="gameBoard" class="game-board"></div>
+
+    <script>
+        var restartBtn =document.getElementById('restartBtn');
+        var gameBoard =document.getElementById('gameBoard');
+
+        //images
+        var imagePaths =[
+        'assets/1.jpg',
+        'assets/2.jpg',
+        'assets/3.jpg',
+        'assets/4.jpg',
+        'assets/5.jpg',
+        'assets/6.jpg',
+        'assets/7.jpg',
+        'assets/8.jpg',
+        ];
+
+        //functinalities
+        var cards = [];
+        var flippedCards = [];
+        var matchedCards = [];
+
+        //generate Cards
+
+        function generateCards(){
+            var images = imagePaths.concat(imagePaths);
+            images = shuffle(images);
+
+            gameBoard.innerHTML = '';
+
+            for( var i = 0; i < images.length; i++) {
+                var card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.image = images[i];
+
+                var img = document.createElement('img');
+                img.src = images[i];
+
+                card.appendChild(img);
+                card.addEventListener('click',flipCard);
+
+                gameBoard.appendChild(card);
+            }
+
+        }
+
+
+        //shuffle cards
+
+        function shuffle(array){
+            for (var i = array.length - 1; i > 0; i-- ){
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
+
+        //fliped cards
+        function flipCard(event){
+            var card = event.currentTarget;
+
+            if (card.classList.contains('flipped') || card.classList.contains('matched')){
+                return;
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2){
+                checkForMatch();
+            }
+
+        }
+
+        //check Matches
+
+        function checkForMatch(){
+            var card1 = flippedCards[0];
+            var card2 = flippedCards[1];
+
+            if (card1.dataset.image === card2.dataset.image){
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedCards.push(card1,card2);
+                flippedCards = [];
+                updateStatus();
+            }else{
+                setTimeout(function(){
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+
+            if (matchedCards.length === imagePaths.length * 2){
+                setTimeout(function(){
+                    alert('You won! Restarting the game...');
+                    restartGame();
+                }, 500);
+            }
+
+        }
+
+
+        //status
+
+        var statusText = document.getElementById('status');
+
+        function updateStatus(){
+            var found = matchedCards.length / 2;
+            var total = imagePaths.length;
+            statusText.textContent = `Pairs Found: ${found} | Pairs Remaining: ${total - found}`;
+        }
+
+        //restart game
+
+        function restartGame(){
+            matchedCards = [];
+            flippedCards = [];
+            generateCards();
+            updateStatus();
+        }
+
+        restartBtn.addEventListener('click', restartGame);
+
+        generateCards();
+
+    </script>
+    
+</body>
+</html>
