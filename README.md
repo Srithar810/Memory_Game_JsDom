@@ -2,6 +2,8 @@
 
 A simple browser-based memory matching game built with **HTML, CSS, and JavaScript**. Flip the cards, find all matching pairs, and have fun training your brain!
 
+
+click here https://memorygamejsdom.netlify.app/
 ---
 
 ## 🎮 How to Play
